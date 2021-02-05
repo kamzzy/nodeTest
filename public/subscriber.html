@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+    
+    <script>
+        function subscribe() {
+            var message = document.getElementById('message');
+            var channel = document.getElementById('channel').value;
+            var host = window.document.location.host.replace(/:.*/, '');
+            var ws = new WebSocket('ws://' + host + ':8080');
+            ws.onopen = function () {
+                ws.send(JSON.stringify({
+                    request: 'SUBSCRIBE',
+                    message: '',
+                    channel: channel
+                }));
+                ws.onmessage = function(event){
+                    data = JSON.parse(event.data);
+                    message.innerHTML = data.message;
+                };
+            };
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="main">
+            <header>
+                <h1>Welcome to Subscriber's Corner</h1>
+            </header>
+          <div class="main1">
+            <input type="text" id="channel" placeholder="Select Topic (weather, sports etc.)" />
+        
+            <button onclick="subscribe()">Subscribe</button>
+
+           </div>
+           <h1>Reading Area</h1>
+           <div id="message"></div>
+        </div>
+    </div>
+   
+</body>
+
+</html>
